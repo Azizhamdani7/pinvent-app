@@ -1,6 +1,11 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+};
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -29,15 +34,18 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Email has already been registered");
   }
-  //encrypt password before saving to DB
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  // Create a new user
   const user = await User.create({
     name,
     email,
-    password: hashedPassword,
+    password,
+  });
+  const token = generateToken(user._id);
+  res.cookie("token", token, {
+    path: "/",
+    httpOnly: true,
+    expires: new Date(Date.now() + 1000 * 86400), // 1 day
+    sameSite: "none",
+    secure: true,
   });
   if (user) {
     const { _id, name, email, photo, phone, bio } = user;
@@ -48,12 +56,44 @@ const registerUser = asyncHandler(async (req, res) => {
       photo,
       phone,
       bio,
+      token,
     });
   } else {
     res.status(400);
     throw new Error("invalid user data");
   }
 });
+
+const loginUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(400);
+    throw new Error("Please add email and password");
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(400);
+    throw new Error("user not found, please signup");
+  }
+  const passwordIsCorrect = await bcrypt.compare(password, user.password);
+
+  if (user && passwordIsCorrect) {
+    const { _id, name, email, photo, phone, bio } = user;
+    res.status(200).json({
+      _id,
+      name,
+      email,
+      photo,
+      phone,
+      bio,
+    });
+  } else {
+    res.status(400);
+    throw new Error("invalid email or password");
+  }
+});
 module.exports = {
   registerUser,
+  loginUser,
 };
