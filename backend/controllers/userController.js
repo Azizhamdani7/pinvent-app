@@ -228,11 +228,12 @@ const forgotPassword = asyncHandler(async (req, res) => {
   //DELETE TOKEN IF IT EXISTS IN THE DATABASE
   let token = await Token.findOne({ userId: user._id });
   if (token) {
-    await token.deletOne();
+    await token.deleteOne();
   }
 
   //create a reset token
   let resetToken = crypto.randomBytes(32).toString("hex") + user._id;
+  console.log(resetToken);
 
   //Hash resettoken before saving to DB
   const hashedToken = crypto
@@ -275,6 +276,39 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 });
 
+//Reset password
+const resetPassword = asyncHandler(async (req, res) => {
+  const { password } = req.body;
+  const { resetToken } = req.params;
+
+  //Hash token then compare to the token in databasee
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  const userToken = await Token.findOne({
+    token: hashedToken,
+    expiresAt: { $gt: Date.now() },
+  });
+
+  if (!userToken) {
+    res.status(404);
+    throw new Error("Invalid or expired token");
+  }
+
+  //Find user
+  const user = await User.findOne({
+    _id: userToken.userId,
+  });
+  user.password = password;
+  await user.save();
+  res.status(200).json({
+    message: "Password reset successful, please login",
+  });
+});
+
+//Find token in DB
 module.exports = {
   registerUser,
   loginUser,
@@ -284,4 +318,5 @@ module.exports = {
   updateUser,
   changePassword,
   forgotPassword,
+  resetPassword,
 };
