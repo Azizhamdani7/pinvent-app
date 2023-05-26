@@ -7,7 +7,7 @@ const sendEmail = async (subject, message, send_to, sent_from, reply_to) => {
     port: 587,
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.PASS,
+      pass: process.env.EMAIL_PASS,
     },
     tls: {
       rejectUnauthorized: false,
@@ -25,8 +25,8 @@ const sendEmail = async (subject, message, send_to, sent_from, reply_to) => {
 
   //send the email
   transporter.sendMail(options, function (error, info) {
-    if (err) {
-      console.log(err);
+    if (error) {
+      console.log(error);
     }
     console.log(info);
   });
