@@ -190,6 +190,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
 //Change password
 const changePassword = asyncHandler(async (req, res) => {
+  //fetch user details from DB
   const user = await User.findById(req.user._id);
 
   const { oldPassword, password } = req.body;
@@ -218,6 +219,7 @@ const changePassword = asyncHandler(async (req, res) => {
   }
 });
 
+//Forgot password
 const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
@@ -250,10 +252,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }).save();
 
   //construct Reset Url
-  const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${hashedToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
 
-  //Reset email
-
+  //Set Email message body
   const message = `
   <h2>Hello ${user.name}</h2>
   <p> please use the url below to reset your password</p>
@@ -276,7 +277,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 });
 
-//Reset password
+//Reset password through the generated hash or received email
 const resetPassword = asyncHandler(async (req, res) => {
   const { password } = req.body;
   const { resetToken } = req.params;
@@ -307,8 +308,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     message: "Password reset successful, please login",
   });
 });
-
-//Find token in DB
 module.exports = {
   registerUser,
   loginUser,
