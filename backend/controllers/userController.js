@@ -307,8 +307,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     message: "Password reset successful, please login",
   });
 });
-
-//Find token in DB
 module.exports = {
   registerUser,
   loginUser,
