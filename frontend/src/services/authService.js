@@ -32,20 +32,33 @@ export const registerUser = async (userData) => {
 
 //Login user
 export const loginUser = async (userData) => {
-    try {
-      const response = await axios.post(
-        `${BACKEND_URL}/api/users/login`,
-        userData
-      );
-      if (response.statusText === "OK") {
-        toast.success("User logged in Successfully");
-      }
-      return response.data;
-    } catch (error) {
-      const message =
-        (error.response && error.response.data && error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
+  try {
+    const response = await axios.post(
+      `${BACKEND_URL}/api/users/login`,
+      userData
+    );
+    if (response.statusText === "OK") {
+      toast.success("User logged in Successfully");
     }
-  };
+    return response.data;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
+//Logout user
+export const logoutUser = async () => {
+  try {
+    await axios.get(`${BACKEND_URL}/api/users/logout`);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
