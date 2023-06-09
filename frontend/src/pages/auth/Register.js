@@ -9,16 +9,16 @@ import { useDispatch } from "react-redux";
 import { SET_LOGIN, SET_NAME } from "../../redux/features/auth/authSlice";
 import Loader from "../../components/loader/Loader";
 
+const initialState = {
+  name: "",
+  email: "",
+  password: "",
+  password2: "",
+};
+
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const initialState = {
-    name: "",
-    email: "",
-    password: "",
-    password2: "",
-  };
-
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(initialState);
 
