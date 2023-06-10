@@ -2,9 +2,9 @@ import { useState } from "react";
 import "./Sidebar.scss";
 import { NavLink } from "react-router-dom";
 import { MdKeyboardArrowRight } from "react-icons/md";
+
 const activeSublink = ({ isActive }) => (isActive ? "active" : "link");
 const activeLink = ({ isActive }) => (isActive ? "active" : "link");
-
 const SidebarItem = ({ item, isOpen }) => {
   const [expandMenu, setExpandMenu] = useState(false);
 
