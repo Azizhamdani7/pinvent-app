@@ -497,3 +497,12 @@ a:hover {
   background-color: var(--light-blue);
   height: 100%;
 }
+.flex-start.flex-two{
+  display: flex;
+  padding-top: 50px;
+}
+
+section.container.flex-one{
+  display: flex;
+  align-items: center;
+}
