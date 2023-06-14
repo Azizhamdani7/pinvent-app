@@ -38,12 +38,12 @@ const Home = () => {
         </ul>
       </nav>
       {/* HERO SECTION */}
-      <section className="container">
+      <section className="container flex-one ">
         <div className="hero-text">
           <h2>CyberMate - Online meeting setup application</h2>
           <p>Online meeting setup application</p>
           <div className="hero-buttons"></div>
-          <div className="flex-start">
+          <div className="flex-start flex-two">
             <NumberText num="14K" text="Brand owners" />
             <NumberText num="23K" text="Active Users" />
             <NumberText num="500+" text="Partners" />
