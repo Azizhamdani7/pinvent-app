@@ -21,6 +21,7 @@ const useRedirectLoggedOutUser = (path) => {
       }
     };
     redirectLoggedOutUser();
+
   }, [navigate, path, dispatch]);
 };
 
