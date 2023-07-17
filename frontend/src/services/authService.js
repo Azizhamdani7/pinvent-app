@@ -1,7 +1,5 @@
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { selectIsLoggedIn } from "../redux/features/auth/authSlice";
 
 export const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
